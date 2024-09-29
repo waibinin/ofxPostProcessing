@@ -30,6 +30,7 @@
  *
  */
 #include "LUTPass.h"
+namespace fs = std::filesystem;
 
 namespace itg
 {
@@ -56,10 +57,21 @@ namespace itg
         int LUT_3D_SIZE = 0;
 
         // load .cube file
-        {
-            path = ofToDataPath(path);
+		{
+			dispose();
 
-            ifstream ifs(path.c_str());
+			vector<RGB> lut;
+			int LUT_3D_SIZE = 0;
+
+			// Convert path from string to std::filesystem::path, if necessary
+			fs::path filePath = path; // If path is a string, first convert to fs::path
+
+			// Use ofToDataPath for proper path resolution and conversion to string
+			fs::path dataPath = ofToDataPath(filePath);
+			std::string resolvedPath = ofPathToString(dataPath); // Convert back to std::string for file handling
+
+			// load .cube file
+			ifstream ifs(resolvedPath.c_str()); // Ensure path is string here
 
             while (!ifs.eof())
             {
